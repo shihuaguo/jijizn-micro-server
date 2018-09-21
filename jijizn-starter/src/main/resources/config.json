@@ -1,0 +1,14 @@
+{
+	"mysql":{
+	  "host" : "localhost",
+	  "port" : 3316,
+	  "maxPoolSize" : 10,
+	  "username" : "admin",
+	  "password" : "admin",
+	  "database" : "test",
+	  "charset" : "utf-8",
+	  "queryTimeout" : 600000,
+	  "sslMode" : "disable",
+	  "sslRootCert" : ""
+	}
+}
