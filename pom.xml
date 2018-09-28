@@ -49,14 +49,6 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			<dependency>
-				<groupId>io.vertx</groupId>
-				<artifactId>vertx-lang-groovy</artifactId>
-			</dependency>
-			<dependency>
-				<groupId>io.vertx</groupId>
-				<artifactId>vertx-lang-js</artifactId>
-			</dependency>
 			
 			<!-- spring dependencies -->
 			<dependency>
@@ -119,10 +111,6 @@
 			<artifactId>vertx-codegen</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>io.vertx</groupId>
-			<artifactId>vertx-sockjs-service-proxy</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>io.vertx</groupId>
@@ -181,7 +169,7 @@
 	</dependencies>
 
 	<build>
-		<resources>
+		<!-- <resources>
 			<resource>
 				<directory>src/conf</directory>
 				<includes>
@@ -196,7 +184,7 @@
 				</includes>
 				<filtering>true</filtering>
 			</resource>
-		</resources>
+		</resources> -->
 
 		<pluginManagement>
 			<plugins>

@@ -4,11 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +19,10 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
 /**
- * @author <a href="http://escoffier.me">Clement Escoffier</a>
+ * 
+ * @author shihuaguo
+ * @email 147402691@qq.com
+ * @date 2018年9月28日
  */
 public class Launcher extends io.vertx.core.Launcher {
 	
@@ -29,6 +30,10 @@ public class Launcher extends io.vertx.core.Launcher {
 
 	public static void main(String[] args) {
 		new Launcher().dispatch(args);
+	}
+	
+	private final void processArgs(String[] args) {
+		
 	}
 
 	@Override
@@ -80,21 +85,17 @@ public class Launcher extends io.vertx.core.Launcher {
 
 	private JsonObject getConfiguration(InputStream is, String path) {
 		JsonObject conf = new JsonObject();
-//		if (config.isFile()) {
-			log.info("Reading config file: " + path);
-			try (Scanner scanner = new Scanner(is).useDelimiter("\\A")) {
-				String sconf = scanner.next();
-				try {
-					conf = new JsonObject(sconf);
-				} catch (DecodeException e) {
-					log.error("Configuration file {} does not contain a valid JSON object", path);
-				}
-			} catch (Exception e) {
-				// Ignore it.
+		log.info("Reading config file: " + path);
+		try (Scanner scanner = new Scanner(is).useDelimiter("\\A")) {
+			String sconf = scanner.next();
+			try {
+				conf = new JsonObject(sconf);
+			} catch (DecodeException e) {
+				log.error("Configuration file {} does not contain a valid JSON object", path);
 			}
-//		} else {
-//			System.out.println("Config file not found " + config.getAbsolutePath());
-//		}
+		} catch (Exception e) {
+			// Ignore it.
+			}
 		return conf;
 	}
 }
