@@ -30,6 +30,8 @@
 		
 		<spring.version>5.0.5.RELEASE</spring.version>
 		<org.apache.commons.version>3.8</org.apache.commons.version>
+		<slf4j-api.version>1.7.25</slf4j-api.version>
+		<logbackVersion.version>1.2.3</logbackVersion.version>
 
 		<!--overridden in each project packaged as a fat jar -->
 		<main.verticle />
@@ -84,6 +86,22 @@
 			    <groupId>org.apache.commons</groupId>
 			    <artifactId>commons-lang3</artifactId>
 			    <version>${org.apache.commons.version}</version>
+			</dependency>
+			
+			<dependency>
+			    <groupId>org.slf4j</groupId>
+			    <artifactId>slf4j-api</artifactId>
+			    <version>${slf4j-api.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>ch.qos.logback</groupId>
+			    <artifactId>logback-classic</artifactId>
+			    <version>${logbackVersion.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>ch.qos.logback</groupId>
+			    <artifactId>logback-core</artifactId>
+			    <version>${logbackVersion.version}</version>
 			</dependency>
 			
 			<dependency>
