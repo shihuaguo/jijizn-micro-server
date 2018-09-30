@@ -5,5 +5,5 @@ import io.vertx.ext.web.Router;
 
 public interface ApiRouter {
 
-	void route(Vertx vertx, Router parent);
+	void route(Vertx vertx, Router parent, String contextPath);
 }

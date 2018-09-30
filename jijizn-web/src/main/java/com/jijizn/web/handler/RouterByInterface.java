@@ -9,19 +9,17 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
 @Component
-public class SubRouter implements ApiRouter {
+public class RouterByInterface implements ApiRouter {
 	
-	private static final Logger log = LoggerFactory.getLogger(SubRouter.class);
+	private static final Logger log = LoggerFactory.getLogger(RouterByInterface.class);
 	
-	private static final String mountPoint = "/sub1";
-
 	@Override
-	public void route(Vertx vertx, Router parent) {
+	public void route(Vertx vertx, Router parent, String contextPath) {
 		Router router = Router.router(vertx);
 		router.route("/test1").handler(this::test1);
-		log.info("mount {}{} to SubRouter's test1 method", mountPoint, "/test1");
+		log.info("mount {}{} to RouterByInterface test1 method", contextPath, "/test1");
 		
-		parent.mountSubRouter(mountPoint, router);
+		parent.mountSubRouter(contextPath, router);
 	}
 	
 	public void test1(RoutingContext rc) {

@@ -1,10 +1,8 @@
 package com.jijizn.web.verticle;
 
-import java.util.Map;
+import java.util.Optional;
 
-import org.springframework.context.ApplicationContext;
-
-import com.jijizn.web.handler.ApiRouter;
+import com.jijizn.web.handler.RouterHelper;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -15,17 +13,20 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.ErrorHandler;
+import io.vertx.ext.web.handler.StaticHandler;
 
-public class MainVerticle extends AbstractVerticle {
-	private static final Logger log = LoggerFactory.getLogger(MainVerticle.class);
+public class WebServer extends AbstractVerticle {
+	private static final Logger log = LoggerFactory.getLogger(WebServer.class);
 	
 	private HttpServer server;
+	
+	private String contextPath;
 
 	@Override
 	public void start(Future<Void> startFuture) throws Exception {
 		HttpServerOptions options = createOptions();
 		server = vertx.createHttpServer(options);
-		server.requestHandler(createRouter()::accept);
+		server.requestHandler(createRouter(options)::accept);
 		server.listen(http -> {
 			if (http.succeeded()) {
 				startFuture.complete();
@@ -38,6 +39,8 @@ public class MainVerticle extends AbstractVerticle {
 	
 	private HttpServerOptions createOptions() {
 		JsonObject httpServerOptions = config().getJsonObject("HttpServerOptions");
+		contextPath = "/" + Optional.of(httpServerOptions.getString("contextPath")).orElse("");
+		contextPath = "/".equals(contextPath) ? "" : contextPath;
 		return new HttpServerOptions(httpServerOptions);
 	}
 	
@@ -50,26 +53,21 @@ public class MainVerticle extends AbstractVerticle {
 		server.close(future.completer());
 	}
 	
-	private Router createRouter() {
+	private Router createRouter(HttpServerOptions options) {
 		Router router = Router.router(vertx);
-		router.route().failureHandler(ErrorHandler.create(true));
-		router.get("/hello").handler(rc -> {
-			rc.response().end("hello,world!");
-		});
-		ApplicationContext context = (ApplicationContext) config().getValue("context");
-		vertx.executeBlocking(f -> {
-			Map<String, ApiRouter> map = context.getBeansOfType(ApiRouter.class);
-			map.entrySet().stream().forEach(ar -> {
-				ar.getValue().route(vertx, router);
-			});
-		}, res -> {
-			if(res.succeeded()) {
-				log.info("init spring context success");
-			}else {
-				log.info("init spring context failed", res.cause());
-			}
-		});
+		router.route(contextPath).failureHandler(ErrorHandler.create(true));
+		
+		staticHandler(router);
+		
+		RouterHelper.mountSubRouter(vertx, router, contextPath);
+		
 		return router;
+	}
+	
+	private void staticHandler(Router router) {
+		StaticHandler staticHandler = StaticHandler.create();
+		staticHandler.setCachingEnabled(false);
+		router.route(contextPath + "/static/*").handler(staticHandler);
 	}
 
 }
