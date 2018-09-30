@@ -15,6 +15,7 @@
 
 	<properties>
 		<main.verticle>io.vertx.starter.MainVerticle</main.verticle>
+		<reflections.version>0.9.11</reflections.version>
 	</properties>
 
 	<dependencies>
@@ -60,7 +61,18 @@
 		    <groupId>ch.qos.logback</groupId>
 		    <artifactId>logback-core</artifactId>
 		</dependency>
-
+		
+		<dependency>
+		    <groupId>org.reflections</groupId>
+		    <artifactId>reflections</artifactId>
+		    <version>${reflections.version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-launcher</artifactId>

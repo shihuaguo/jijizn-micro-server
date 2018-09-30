@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 
 import com.jijizn.micro.context.Context;
 
@@ -34,17 +33,19 @@ public class Launcher extends io.vertx.core.Launcher implements VertxLifecycleHo
 	private static final Logger log = LoggerFactory.getLogger(Launcher.class);
 	
 	/**
-	 * 用于支持多文件配置路径，路径支持classpath:/和file:/前缀
-	 * 类似于--spring.config.location
+	 * support for multi config files,path prefix can be classpath:/ or file:/
+	 * for example:classpath:/config.json,file:/opt/config/vertx.json
 	 */
 	private static final String VERTX_CONFIG_LOCATION = "--vertx.config.location=";
 	private static String[] vertxConfigLocation;
 	
-	//options use to start vertx instance
+	/**
+	 * options use to start vertx instance
+	 * will be read from config file specified by VERTX_CONFIG_LOCATION afterConfigParsed
+	 * option inlcue clustered,clusterHost and clusterPort
+	 * these options doesn't ovveride system properties
+	 */
 	private static final JsonObject vertxOptions = new JsonObject();
-	
-	static {
-	}
 
 	public static void main(String[] args) {
 		setLogger();
@@ -99,8 +100,8 @@ public class Launcher extends io.vertx.core.Launcher implements VertxLifecycleHo
 		JsonObject config = deploymentOptions.getConfig();
 		if(config.getString("packages_scan") != null) {
 			log.info("scanning packages {}", config.getString("packages_scan"));
-			ApplicationContext context = Context.INSTANCE.getAnnotationConfigApplicationContext(config.getString("packages_scan").split(","));
-			deploymentOptions.getConfig().put("context", context);
+			Context.INSTANCE.init(config.getString("packages_scan").split(","));
+			//deploymentOptions.getConfig().put("context", context);
 		}
 		super.beforeDeployingVerticle(deploymentOptions);
 	}
@@ -112,9 +113,9 @@ public class Launcher extends io.vertx.core.Launcher implements VertxLifecycleHo
 	}
 
 	/**
-	 * 对VERTX_CONFIG_LOCATION参数指定的路径下的json进行加载
-	 * 如果VERTX_CONFIG_LOCATION未指定,加载classpath:/下的config.json文件
-	 * 对于其他文件(如yml文件),则在vertx启动之后加载
+	 * load json config file specified by VERTX_CONFIG_LOCATION
+	 * multi config file divide by ",", for example:classpath:/config.json,file:/opt/config/vertx.json
+	 * if VERTX_CONFIG_LOCATION isn't exists, load classpath:/config.json 
 	 */
 	private static final JsonObject getJsonConfiguration() {
 		JsonObject config = new JsonObject();

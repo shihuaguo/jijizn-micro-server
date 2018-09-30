@@ -32,6 +32,7 @@
 		<org.apache.commons.version>3.8</org.apache.commons.version>
 		<slf4j-api.version>1.7.25</slf4j-api.version>
 		<logbackVersion.version>1.2.3</logbackVersion.version>
+		<javax.ws.rs.version>2.1.1</javax.ws.rs.version>
 
 		<!--overridden in each project packaged as a fat jar -->
 		<main.verticle />
@@ -107,8 +108,16 @@
 			<dependency>
 			  <groupId>io.vertx</groupId>
 			  <artifactId>vertx-mysql-postgresql-client</artifactId>
-			  <version>3.5.3</version>
+			  <version>${vertx.version}</version>
 			</dependency>
+			
+			<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+			<dependency>
+			    <groupId>javax.ws.rs</groupId>
+			    <artifactId>javax.ws.rs-api</artifactId>
+			    <version>${javax.ws.rs.version}</version>
+			</dependency>
+						
 
 		</dependencies>
 	</dependencyManagement>
