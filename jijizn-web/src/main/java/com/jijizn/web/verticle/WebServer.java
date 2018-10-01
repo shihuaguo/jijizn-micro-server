@@ -38,9 +38,9 @@ public class WebServer extends AbstractVerticle {
 	}
 	
 	private HttpServerOptions createOptions() {
-		JsonObject httpServerOptions = config().getJsonObject("HttpServerOptions");
-		contextPath = "/" + Optional.of(httpServerOptions.getString("contextPath")).orElse("");
-		contextPath = "/".equals(contextPath) ? "" : contextPath;
+		JsonObject httpServerOptions = Optional.ofNullable(config().getJsonObject("HttpServerOptions")).orElse(new JsonObject());
+		contextPath = "/" + Optional.ofNullable(httpServerOptions.getString("contextPath")).orElse("");
+		//contextPath = "/".equals(contextPath) ? "" : contextPath;
 		return new HttpServerOptions(httpServerOptions);
 	}
 	
@@ -55,7 +55,7 @@ public class WebServer extends AbstractVerticle {
 	
 	private Router createRouter(HttpServerOptions options) {
 		Router router = Router.router(vertx);
-		router.route(contextPath).failureHandler(ErrorHandler.create(true));
+		router.route().failureHandler(ErrorHandler.create(true));
 		
 		staticHandler(router);
 		
@@ -67,7 +67,8 @@ public class WebServer extends AbstractVerticle {
 	private void staticHandler(Router router) {
 		StaticHandler staticHandler = StaticHandler.create();
 		staticHandler.setCachingEnabled(false);
-		router.route(contextPath + "/static/*").handler(staticHandler);
+		String staticPath = contextPath.endsWith("/") ? contextPath + "static/*" : contextPath + "/static/*";
+		router.route(staticPath).handler(staticHandler);
 	}
 
 }

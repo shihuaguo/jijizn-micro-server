@@ -39,7 +39,7 @@
 	</properties>
 
 	<modules>
-		<module>jijizn-starter</module>
+		<module>jijizn-web</module>
 		<module>micro-common</module>
 	</modules>
 
