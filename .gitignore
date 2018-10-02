@@ -15,3 +15,5 @@
 /jijizn-web/.mvn
 /jijizn-web/.project
 /jijizn-web/.classpath
+/.idea
+/.vertx
